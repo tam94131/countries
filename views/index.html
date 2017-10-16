@@ -4,25 +4,81 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Blank</title>
+    <title>Countries I've visited</title>
 
     <!-- STYLESHEETS -->
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/styles/styles.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../public/styles/styles.css">
 
     <!-- VENDOR SCRIPTS -->
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
 
     <!-- APPLICATION SCRIPTS -->
-    <script src="/scripts/app.js"></script>
+    <script src="../public/scripts/app.js"></script>
   </head>
+
   <body>
     <div class="container">
       <div class="row">
+
         <div class="col-md-8 col-md-offset-2">
-          <h1>Under Construction</h1>
-          <h4><a href="/api">Read My API Documentation</a></h4>
+          <h1>My profile</h1>
+          <!--<h4><a href="/api">Read My API Documentation</a></h4>-->
+          <div id="myProfile"></div>
         </div>
+
+        <div class="col-md-8 col-md-offset-2">
+          <h1>API instructions</h1>
+          <!--<h4><a href="/api">Read My API Documentation</a></h4>-->
+          <div id="apiInstructions"></div>
+        </div>
+
+        <div class="col-md-8 col-md-offset-2">
+          <h1>List of countries</h1>
+          <!--<h4><a href="/api">Read My API Documentation</a></h4>-->
+          <div id="listCountries"></div>
+        </div>
+
+        <div class="col-md-8 col-md-offset-2">
+          <h1>Add a country</h1>
+          <!-- <h4><a href="/api">Read My API Documentation</a></h4> -->
+            
+            <form id="countryForm" action="">
+            Name: <input id="name" type="text" name="name" placeholder="E.g., USA" />
+            Numb of visits: <input id="visits" type="text" name="visits" placeholder="E.g, 10" />
+            Why went: <input id="whyIWent" type="text" name="whyIWent" placeholder="E.g., went for fun" />
+            Highlights: <input id="highlights" type="text" name="highlights" placeholder="E.g., saw the Queen" />
+            <input id="countrySubmit" type="submit" />
+          </form>
+
+        </div>
+
+<!--
+        <div class="col-md-8 col-md-offset-2">
+          <h1>Profile</h1>
+          <h4><a href="/api">Read My API Documentation</a></h4>
+          <div id="apiinstructions"></div>
+        </div>
+
+        <div class="col-md-8 col-md-offset-2">
+          <h1>Profile</h1>
+          <h4><a href="/api">Read My API Documentation</a></h4>
+          <div id="apiinstructions"></div>
+        </div>
+
+        <div class="col-md-8 col-md-offset-2">
+          <h1>Profile</h1>
+          <h4><a href="/api">Read My API Documentation</a></h4>
+          <div id="apiinstructions"></div>
+        </div>
+
+        <div class="col-md-8 col-md-offset-2">
+          <h1>Profile</h1>
+          <h4><a href="/api">Read My API Documentation</a></h4>
+          <div id="apiinstructions"></div>
+        </div>
+-->
+
       </div>
     </div>
   </body>

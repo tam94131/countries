@@ -15,14 +15,36 @@ app.use(function(req, res, next) {
   next();
 });
 
-console.log("Server has started!");
+// Serve static files from the `/public` directory:
+// i.e. `/images`, `/scripts`, `/styles`
+app.use(express.static('public'));
+
+
+// console.log("server.js has (re-)started!");
 
 
 /************
  * DATABASE *
  ************/
+var mongoose = require("mongoose");
+mongoose.connect( process.env.MONGODB_URI || "mongodb://localhost/personal-api");
 
-// var db = require('./models');
+var CountryDB = require('./models/countries');
+// var CountryDB = require('./models');
+
+var homeBase = new CountryDB({
+  name: "USA",
+  visits: 100,
+  whyIWent: "I was born here",
+  highlights: "'Life' is a highlight!"
+});
+
+homeBase.save( function(err, newCountry){
+    console.log("We had a save!");
+    if(err) {return console.log(err);}
+    console.log("saved new person: ", newCountry);
+});
+
 
 var meProfile = {
   name: "Tahl Milburn",
@@ -71,11 +93,6 @@ var countries = [
  * ROUTES *
  **********/
 
-// Serve static files from the `/public` directory:
-// i.e. `/images`, `/scripts`, `/styles`
-app.use(express.static('public'));
-
-
 /*
  * HTML Endpoints
  */
@@ -91,8 +108,8 @@ app.get('/', function homepage(req, res) {
 
 app.get('/api', function apiIndex(req, res) {
   res.json({
-    message: "Welcome to my personal api! Here's what you need to know!",
-    documentationUrl: "https://github.com/tam94131/express_self_api/README.md", 
+    message: "Welcome to my personal API! Here's what you need to know!",
+    documentationUrl: "https://github.com/tam94131/express_personal_api/README.md", 
     baseUrl: "TBD", 
     endpoints: [
       {method: "GET",    path: "/api", description: "Describes all available endpoints"},
@@ -108,26 +125,99 @@ app.get('/api', function apiIndex(req, res) {
 });
 
 app.get('/api/profile', function index(req, res) {
-  /* Get list of all todos */
+  /* Get list of all countries */
   res.json(meProfile);
 });
 
 app.get('/api/countries', function index(req, res) {
-  /* Get list of all todos */
-  // res.send({"data": countries});
-  res.json({"data": countries});
+  /* Get list of all countries */
+  res.send({"data": countries});
+  // res.json({"data": countries});
 });
 
-// app.post('/api/collecto', function create(req, res) {
-//   /* add a new entry */
-//     let newTodo = req.body;
-//     let newObj = new Object;
-//     newObj._id  = todos[todos.length-1]._id + 1;
-//     newObj.task = newTodo.task;
-//     newObj.description = newTodo.description;
-//     todos.push(newObj);
-//     res.json(newObj);
-// })
+app.get('/api/countries/search', function search(req, res) {
+  /* This endpoint responds with the search results from the
+   * query in the request. */
+  let searchTerm = req.query.q.toLowerCase();
+  let newArray = [];
+  for (j=0; j<countries.length; j++) {
+    if (countries[j].name.toLowerCase() === searchTerm) {
+        newArray.push(countries[j]);
+    }
+  }
+  res.json({"data": newArray});
+});
+
+app.post('/api/countries', function create(req, res) {
+  /* This endpoint will add a todo to our "database"
+   * and respond with the newly created todo.
+   */
+    let newCountry = req.body;
+    let newObj = new Object;
+
+    console.log(newCountry);
+    newObj._id  = countries[countries.length-1]._id + 1;
+    newObj.name = newCountry.name;
+    newObj.visits = parseInt(newCountry.visits);
+    newObj.whyIWent = newCountry.whyIWent;
+    newObj.highlights = newCountry.highlights;
+
+    countries.push(newObj);
+    res.json(newObj);
+});
+
+app.get('/api/countries/:id', function show(req, res) {
+  /* This endpoint will return a single country with the
+   * id specified in the route parameter (:id)
+   */
+  let ID = req.params.id;
+  var theElement = countries.find( function(item) {
+    return item._id.toString() === ID;
+  });
+  if (theElement) {
+    res.json(theElement);
+  }
+});
+
+app.put('/api/countries/:id', function update(req, res) {
+  /* This endpoint will update a single country with the
+   * id specified in the route parameter (:id) and respond
+   * with the newly updated country.
+   */
+  let ID = req.params.id;
+  console.log("update requested");
+  var theElement = countries.find( function(item,thisIndex) {
+    console.log("found a country for update");
+    return item._id.toString() === ID;
+  });
+  if (theElement) {
+    console.log("equating parms");
+    theElement.name = req.body.name;
+    theElement.visits = parseInt(req.body.visits);
+    theElement.whyIWent = req.body.whyIWent;
+    theElement.highlights = req.body.highlights;
+    res.json(theElement);
+  }
+});
+
+app.delete('/api/countries/:id', function destroy(req, res) {
+  /* This endpoint will delete a single country with the
+   * id specified in the route parameter (:id) and respond
+   * with success.
+   */
+  let ID = req.params.id;
+  let indexArr = -1;
+  for (j=0; j<countries.length; j++) {
+    if (countries[j]._id.toString() === ID) {
+      indexArr = j;
+      break;
+    }
+  }
+  if (indexArr=>0) {
+    countries.splice(indexArr,1);
+    res.json(countries[indexArr]);
+  }
+});
 
 
 
